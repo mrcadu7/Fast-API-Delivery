@@ -42,3 +42,12 @@ class OrderModel(BaseModel):
                 "user_id":1
             }
         }
+
+
+class Settings(BaseModel):
+    authjwt_secret_key:str="374965cec467ad3a7af863446d63403cfe4746f6d8442ee643395aa5ebe63cde"
+    
+
+class LoginModel(BaseModel):
+    username:str
+    password:str
