@@ -51,3 +51,17 @@ class Settings(BaseModel):
 class LoginModel(BaseModel):
     username:str
     password:str
+    
+    
+class OrderModel(BaseModel):
+    quantity:int
+    pizza_size:Optional[str]="PEQUENA"
+    
+    class Config:
+        from_attributes=True
+        json_schema_extra={
+            'example':{
+                "quantity":2,
+                "pizza_size":"FAMILIA",
+            }
+        }
