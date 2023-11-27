@@ -29,6 +29,12 @@ async def authorize(Authorize: AuthJWT):
 
 @order_router.get("/")
 async def hello(Authorize: AuthJWT = Depends()):
+    
+    """
+        ## Endpoint para teste de rota
+        retorna um "Hello World"
+    """
+    
     try:
         await Authorize.jwt_required()
     except Exception as e:
@@ -39,6 +45,15 @@ async def hello(Authorize: AuthJWT = Depends()):
 
 @order_router.post("/order", status_code=201)
 async def place_an_order(order:OrderModel,Authorize: AuthJWT = Depends()):
+    
+    """
+        ## Criar um novo pedido
+        Precisa do seguinte:
+        ```
+            - quantity : int
+            - pizza_size : str```
+    """
+    
     user = await authorize(Authorize)
     
     new_order = Order(
@@ -64,6 +79,12 @@ async def place_an_order(order:OrderModel,Authorize: AuthJWT = Depends()):
 
 @order_router.get("/orders")
 async def list_all_orders(Authorize: AuthJWT = Depends()):
+    
+    """
+        ## Listar todos os pedidos
+        Retorna todos os pedidos, apenas para administradores
+    """
+    
     user = await authorize(Authorize)
     
     if user.is_staff:
@@ -76,6 +97,12 @@ async def list_all_orders(Authorize: AuthJWT = Depends()):
 
 @order_router.get("/orders/{id}")
 async def get_order_by_id(id:int,Authorize: AuthJWT = Depends()):
+    
+    """
+        ## Listar um pedido pelo ID
+        Retorna um pedido pelo ID, apenas para administradores
+    """
+    
     user = await authorize(Authorize)
     
     if user.is_staff:
@@ -88,6 +115,12 @@ async def get_order_by_id(id:int,Authorize: AuthJWT = Depends()):
 
 @order_router.get('/user/orders')
 async def get_user_orders(Authorize: AuthJWT = Depends()):
+    
+    """
+        ## Listar os pedidos de um usuário
+        Lista os pedidos do usuário logado
+    """
+    
     user = await authorize(Authorize)
     
     return jsonable_encoder(user.orders)
@@ -95,6 +128,12 @@ async def get_user_orders(Authorize: AuthJWT = Depends()):
 
 @order_router.get('/user/orders/{id}')
 async def get_specific_order(id:int,Authorize: AuthJWT = Depends()):
+    
+    """
+        ## Listar um pedido específico para o usuário logado
+        Retorna um pedido pelo ID do usuário logado
+    """
+    
     user = await authorize(Authorize)
     
     order = user.orders
@@ -108,6 +147,16 @@ async def get_specific_order(id:int,Authorize: AuthJWT = Depends()):
 
 @order_router.put('/order/update/{id}')
 async def update_order(id:int, order:OrderModel, Authorize: AuthJWT = Depends()):
+    
+    """
+        ## Atualizar um pedido
+        Atualiza um pedido e necessita do seguinte:
+        ```
+            - quantity : int
+            - pizza_size : str
+        ```
+    """
+    
     user = await authorize(Authorize)
     
     order_to_update = session.query(Order).filter(Order.id == id).first()
@@ -129,6 +178,15 @@ async def update_order(id:int, order:OrderModel, Authorize: AuthJWT = Depends())
 
 @order_router.patch('/order/update/{id}')
 async def update_order_status(id:int, order:OrderStatusModel, Authorize: AuthJWT = Depends()):
+    
+    """
+        ## Atualizar o status de um pedido
+        Atualiza o status de um pedido e necessita do seguinte:
+        ```
+            - order_status : str
+        ```
+    """
+    
     user = await authorize(Authorize)
     
     if user.is_staff:
@@ -152,6 +210,12 @@ async def update_order_status(id:int, order:OrderStatusModel, Authorize: AuthJWT
 
 @order_router.delete('/order/delete/{id}', status_code=204)
 async def delete_order(id:int, Authorize: AuthJWT = Depends()):
+    
+    """
+        ## Excluir um pedido
+        Deleta um pedido pelo ID
+    """
+    
     user = await authorize(Authorize)
     
     order_to_delete = session.query(Order).filter(Order.id == id).first()

@@ -18,6 +18,12 @@ session = Session(bind=engine)
 
 @auth_router.get("/")
 async def hello(Authorize: AuthJWT = Depends()):
+    
+    """
+        ## Endpoint para teste de rota
+        retorna um "Hello World"
+    """
+    
     try:
         await Authorize.jwt_required()
     except Exception as e:
@@ -27,6 +33,19 @@ async def hello(Authorize: AuthJWT = Depends()):
 
 @auth_router.post("/signup", status_code=201)
 async def signup(user: SignUpModel):
+    
+    """
+        ## Cria um novo usuário
+        Necessita dos seguintes campos:
+        ```
+            username:int
+            email:str
+            password:str
+            is_staff:bool
+            is_active:bool
+        ```
+    """
+    
     db_email=session.query(User).filter(User.email==user.email).first()
     
     if db_email is not None:
@@ -55,6 +74,17 @@ async def signup(user: SignUpModel):
 
 @auth_router.post("/login", status_code=200)
 async def login(user: LoginModel, Authorize: AuthJWT = Depends()):
+    
+    """
+        ## Loga um usuário
+        Necessita dos seguintes campos:
+        ```
+            username:str
+            password:str
+        ```
+        Retorna um token de acesso
+    """
+    
     db_user=session.query(User).filter(User.username==user.username).first()
     
     if db_user and check_password_hash(db_user.password, user.password):
@@ -74,6 +104,12 @@ async def login(user: LoginModel, Authorize: AuthJWT = Depends()):
 
 @auth_router.get("/refresh")
 async def refresh(Authorize: AuthJWT = Depends()):
+    
+    """
+        ## Cria um novo token de acesso
+        Cria um novo token de acesso com base no token de atualização 
+    """
+    
     try:
          await Authorize.jwt_refresh_token_required()
     except Exception as e:
