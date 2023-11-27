@@ -25,7 +25,7 @@ async def hello(Authorize: AuthJWT = Depends()):
     return {"message": "Hello World"}
 
 
-@auth_router.post("/signup")
+@auth_router.post("/signup", status_code=201)
 async def signup(user: SignUpModel):
     db_email=session.query(User).filter(User.email==user.email).first()
     

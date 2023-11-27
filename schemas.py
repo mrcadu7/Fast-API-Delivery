@@ -3,7 +3,6 @@ from pydantic import BaseModel
 
 
 class SignUpModel(BaseModel):
-    id:Optional[int]
     username:str
     email:str
     password:str
@@ -15,7 +14,6 @@ class SignUpModel(BaseModel):
         from_attributes=True
         json_schema_extra={
             'example':{
-                "id":1,
                 "username":"johndoe",
                 "email":"johndoe@gmail.com",
                 "password":"password",
@@ -63,5 +61,17 @@ class OrderModel(BaseModel):
             'example':{
                 "quantity":2,
                 "pizza_size":"FAMILIA",
+            }
+        }
+
+
+class OrderStatusModel(BaseModel):
+    order_status:Optional[str]="PENDENTE"
+    
+    class Config:
+        from_attributes=True
+        json_schema_extra={
+            'example':{
+                "order_status":"A CAMINHO",
             }
         }
